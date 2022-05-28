@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="434.0" prefWidth="857.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.fatec.financeiro.Controllers.VisualizarController">
+    <stylesheets>
+        <URL value="@visualizar.css" />
+    </stylesheets>
+   <children>
+      <ToolBar prefHeight="40.0" prefWidth="857.0">
+         <items>
+            <Button fx:id="btVoltar" mnemonicParsing="false" onAction="#voltar_Click" text="Voltar" />
+         </items>
+      </ToolBar>
+      <SplitPane dividerPositions="0.7548872180451128" layoutX="14.0" layoutY="96.0" prefHeight="327.0" prefWidth="667.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="325.0" prefWidth="497.0">
+               <children>
+                  <TableView fx:id="tbValores" layoutX="15.0" layoutY="7.0" prefHeight="312.0" prefWidth="460.0">
+                    <columns>
+                      <TableColumn fx:id="clCompra" prefWidth="75.0" text="Compra" />
+                      <TableColumn fx:id="clPreco" prefWidth="75.0" text="Preço" />
+                        <TableColumn fx:id="clData" prefWidth="157.0" text="Data da compra" />
+                        <TableColumn fx:id="clUsuario" prefWidth="75.0" text="Id_Usuario" />
+                        <TableColumn fx:id="clDepara" prefWidth="77.0" text="Depara" />
+                    </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="338.0" prefWidth="131.0">
+               <children>
+                  <Button fx:id="btAdicionar" layoutX="21.0" layoutY="120.0" mnemonicParsing="false" onAction="#adicionar_Click" prefHeight="25.0" prefWidth="118.0" text="Adicionar" />
+                  <Label layoutX="53.0" layoutY="14.0" text="OPÇÕES">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="btRemover" layoutX="22.0" layoutY="179.0" mnemonicParsing="false" onAction="#remover_Click" prefHeight="25.0" prefWidth="118.0" text="Remover" />
+                  <Button fx:id="btAtualizar" layoutX="21.0" layoutY="239.0" mnemonicParsing="false" onAction="#atualizar_Click" prefHeight="25.0" prefWidth="118.0" text="Atualizar" />
+                  <ComboBox fx:id="cmbFiltro" layoutX="5.0" layoutY="77.0" onAction="#filtro_Change" onDragDropped="#filtro_Drop" prefWidth="150.0" />
+                  <Label layoutX="60.0" layoutY="51.0" text="FILTRO">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+      <TextField fx:id="txPreco" layoutX="692.0" layoutY="146.0" />
+      <Button fx:id="btEditar" layoutX="707.0" layoutY="321.0" mnemonicParsing="false" onAction="#editar_Click" prefHeight="25.0" prefWidth="118.0" text="Editar" />
+      <Label layoutX="741.0" layoutY="105.0" text="EDITAR">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <DatePicker fx:id="dtEditavel" layoutX="694.0" layoutY="261.0" onAction="#dataEditavel" prefHeight="25.0" prefWidth="149.0" />
+      <ComboBox fx:id="cmbDepara" layoutX="691.0" layoutY="203.0" onAction="#depara_Change" onDragDropped="#filtro_Drop" prefWidth="150.0" />
+      <Label layoutX="310.0" layoutY="40.0" prefHeight="53.0" prefWidth="278.0" text="VISUALIZAÇÃO">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

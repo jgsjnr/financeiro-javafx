@@ -1,0 +1,1 @@
+select sum(preco) as soma, year(data_compra) as ano from valores group by ano;

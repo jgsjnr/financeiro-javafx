@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="549.0" prefWidth="591.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/18" fx:controller="br.com.fatec.financeiro.Controllers.GraficoController">
+    <stylesheets>
+        <URL value="@grafico.css" />
+    </stylesheets>
+   <children>
+      <BarChart fx:id="gfGastos" layoutX="14.0" layoutY="66.0" prefHeight="201.0" prefWidth="574.0" title="Gastos Barra">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" fx:id="x" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="y" side="LEFT" />
+        </yAxis>
+      </BarChart>
+      <Button fx:id="btnAtualizar" layoutX="351.0" layoutY="494.0" mnemonicParsing="false" onAction="#atualizar_Click" prefHeight="25.0" prefWidth="231.0" text="Atualizar" />
+      <LineChart fx:id="gfGastoln" layoutX="14.0" layoutY="287.0" prefHeight="192.0" prefWidth="574.0" title="Gastos Linha">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" fx:id="xln" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="yln" side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <ToolBar layoutX="1.0" layoutY="1.0" prefHeight="40.0" prefWidth="600.0">
+         <items>
+            <Button fx:id="btVoltar" mnemonicParsing="false" onAction="#voltar_Click" text="Voltar" />
+         </items>
+      </ToolBar>
+   </children>
+</AnchorPane>
