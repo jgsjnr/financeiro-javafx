@@ -68,7 +68,7 @@ public class MenuController implements Initializable {
 
     @FXML
     private void valores_Cliok(ActionEvent event) {
-        App.mudarCena("Grafico");
+        App.mudarCena("ListaCompras");
     }
 
     @FXML

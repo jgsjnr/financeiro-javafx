@@ -20,7 +20,7 @@ public class App extends Application {
     private static Scene valores;
     private static Scene depara;
     private static Scene grafico;
-    //private static Scene listaCompras;
+    private static Scene listaCompras;
     private static Stage stage;
 
     
@@ -35,7 +35,7 @@ public class App extends Application {
         menu = new Scene(loadFXML("Menu"), 600, 400);
         grafico = new Scene(loadFXML("Grafico"), 601, 549);
         scene = new Scene(loadFXML("Login"), 453, 176);
-        //listaCompras = new Scene(loadFXML("listaCompras"), 453, 176);
+        listaCompras = new Scene(loadFXML("listaCompras"), 607, 400);
         
         stage.setScene(scene);
         stage.show();
@@ -51,7 +51,7 @@ public class App extends Application {
         depara.setRoot(loadFXML(fxml));
         menu.setRoot(loadFXML(fxml));
         grafico.setRoot(loadFXML(fxml));
-        //listaCompras.setRoot(loadFXML(fxml));
+        listaCompras.setRoot(loadFXML(fxml));
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
@@ -92,6 +92,10 @@ public class App extends Application {
                 break;
             case "Grafico":
                 stage.setScene(grafico);
+                stage.setTitle("Sistema financeiro pessoal: Graficos");
+                break;
+            case "ListaCompras":
+                stage.setScene(listaCompras);
                 stage.setTitle("Sistema financeiro pessoal: Graficos");
                 break;
         }
