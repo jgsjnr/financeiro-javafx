@@ -5,6 +5,7 @@
 package br.com.fatec.financeiro.Controllers;
 
 import br.com.fatec.financeiro.App;
+import br.com.fatec.financeiro.Conexao;
 import br.com.fatec.financeiro.Depara;
 import br.com.fatec.financeiro.ListaCompras;
 import br.com.fatec.financeiro.Depara;
@@ -17,6 +18,7 @@ import java.net.URL;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -83,15 +85,31 @@ public class ListaComprasController implements Initializable {
     LocalDate data = null;
     @FXML
     private Button btVoltar;
-    
+    Conexao conn = new Conexao("fin");
     /**
      * Initializes the controller class.
      */
+    
+    public void carregarCmbDepara(){
+        String query = "SELECT * FROM depara_padrao";
+        conn.setRsTable(query);
+        try{
+            while(conn.getRsTable().next()){
+                combo.add(new Depara(conn.getRsTable().getInt("id"),
+                        conn.getRsTable().getString("tipo"),
+                        conn.getRsTable().getInt("depara")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VisualizarController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cbCategoria.setItems(combo);
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
         
-        
+        conn.iniciarConexao();
         //Configurando o comportamento das celulas
         tabelaLista.getSelectionModel().selectedItemProperty().addListener((observado, velho, novo) -> {
             txtPreco_compra.setText(Integer.toString(novo.getPrecoCompra()));
@@ -100,7 +118,7 @@ public class ListaComprasController implements Initializable {
         clPreco_compra.setCellValueFactory(new PropertyValueFactory<>("precoCompra"));
         clData_compra.setCellValueFactory(new PropertyValueFactory< >("dataCompra"));
         clCategoria.setCellValueFactory(new PropertyValueFactory<>("Categoria"));
-        deparaExemplo();
+        carregarCmbDepara();
         atualizarLista();
  
     }   
@@ -112,15 +130,6 @@ public class ListaComprasController implements Initializable {
     
     // popula combo box 
     
-    private void deparaExemplo(){
-        combo.add(new Depara(1, "Comida", 201));
-        combo.add(new Depara(2, "Gasto com moradia", 202));
-        combo.add(new Depara(3, "Reparo e imprevisto", 203));
-        combo.add(new Depara(4, "Compra Extra", 204));
-        combo.add(new Depara(5, "Investimento", 205));
-        cbCategoria.setItems(combo);
-        
-    }
     
     private void limpar(){
         txtPreco_compra.setText(null);
