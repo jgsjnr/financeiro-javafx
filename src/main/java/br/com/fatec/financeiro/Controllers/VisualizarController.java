@@ -90,6 +90,7 @@ public class VisualizarController implements Initializable {
     private void carregarEdicao(){
         tbValores.getSelectionModel().selectedItemProperty().addListener((observado, antigo, novo) -> {
             txPreco.setText(String.valueOf(novo.getPreco()));
+            cmbFiltro.getSelectionModel().clearSelection();
         });
     }
     
@@ -139,6 +140,7 @@ public class VisualizarController implements Initializable {
     }
     
     public void atualizarFiltro(int fil){
+        valores.clear();
         tbValores.getItems().clear();
         String query = "SELECT * FROM valores WHERE fk_depara = "+fil+";";
             conn.setRsTable(query);
@@ -213,18 +215,23 @@ public class VisualizarController implements Initializable {
             limparSelecoes();
             avisos.ok("Adicionado com sucesso!");
         }else{
-            avisos.erro("Não foi possível editar dados");
+            avisos.erro("Não foi possível editar dados, campos vazios");
         }
         cmbDepara.getSelectionModel().clearSelection();
     }
 
     @FXML
     private void remover_Click(ActionEvent event) {
-        Valores aux = tbValores.getSelectionModel().getSelectedItem();
-        String query = "DELETE FROM valores WHERE id = "+aux.getId()+";";
-        conn.executarQuery(query);
-        carregarTabelaValores();
-        cmbFiltro.getSelectionModel().clearSelection();
+        if(tbValores.getSelectionModel().isEmpty() == true){
+            avisos.erro("Nada selecionado!");
+        }else{
+            Valores aux = tbValores.getSelectionModel().getSelectedItem();
+            String query = "DELETE FROM valores WHERE id = "+aux.getId()+";";
+            conn.executarQuery(query);
+            carregarTabelaValores();
+            cmbFiltro.getSelectionModel().clearSelection();
+        }
+        
     }
 
     @FXML

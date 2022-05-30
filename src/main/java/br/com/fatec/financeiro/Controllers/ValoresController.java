@@ -84,7 +84,7 @@ public class ValoresController implements Initializable {
     public void adicionarValores(){
         Depara d = cmbFiltro.getValue();
         Usuario u = cmbUsuario.getValue();
-        if(data.toString() != "" | txPreco.getText() != ""){
+        if(this.data == null | txPreco.getText() != "" | cmbUsuario.getSelectionModel().isEmpty() | cmbFiltro.getSelectionModel().isEmpty()){
             String query = "INSERT INTO valores(preco, data_compra, fk_id, fk_depara) "
                     + "VALUES('"+txPreco.getText()+"','"+data.toString()+"','"+u.getId()+"','"+d.getDepara()+"');";
             conn.executarQuery(query);
@@ -93,6 +93,7 @@ public class ValoresController implements Initializable {
             cmbFiltro.getSelectionModel().clearSelection();
             cmbUsuario.getSelectionModel().clearSelection();
             carregarCmbDepara();
+            avisos.ok("Adicionados com sucesso!");
         }else{
             avisos.erro("Não foi possível adicionar banco ao banco de dados!");
         }

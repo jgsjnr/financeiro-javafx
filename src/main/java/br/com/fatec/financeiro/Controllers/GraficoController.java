@@ -16,9 +16,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 
@@ -38,15 +35,11 @@ public class GraficoController implements Initializable {
     private Button btVoltar;
     @FXML
     private BarChart<String, Integer> gfGastos;
-    /**
-     * Initializes the controller class.
-     */
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
         conn.iniciarConexao();
         carregarDados();
-        //transferirDados();        
         executarDados();
     }
     
@@ -61,14 +54,6 @@ public class GraficoController implements Initializable {
             avisos.erro("Não foi possível carregar dados devido: "+ex.getMessage());
         }
     }
-    /*
-    private void transferirDados(){
-        serieLn.getData().removeAll();
-        for(Dados d: dados){
-            serieLn.getData().add(new XYChart.Data(d.getAno(), d.getValor()));
-        }
-    }
-    */
     private void executarDados(){
         gfGastos.getData().addAll(serieLn);
     }
