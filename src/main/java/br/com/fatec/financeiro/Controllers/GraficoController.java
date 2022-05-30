@@ -5,14 +5,13 @@
 package br.com.fatec.financeiro.Controllers;
 
 import br.com.fatec.financeiro.App;
+import br.com.fatec.financeiro.Avisos;
 import br.com.fatec.financeiro.Conexao;
 import br.com.fatec.financeiro.Dados;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,6 +28,7 @@ import javafx.scene.control.Button;
  * @author junior
  */
 public class GraficoController implements Initializable {
+    Avisos avisos = new Avisos();
     Conexao conn = new Conexao("fin");
     ArrayList<Dados> dados = new ArrayList<>();
     XYChart.Series serieBar = new XYChart.Series();
@@ -72,7 +72,7 @@ public class GraficoController implements Initializable {
                 dados.add(new Dados(conn.getRsTable().getString("ano"), conn.getRsTable().getFloat("soma")));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(GraficoController.class.getName()).log(Level.SEVERE, null, ex);
+            avisos.erro("Não foi possível carregar dados devido: "+ex.getMessage());
         }
     }
     
@@ -96,6 +96,7 @@ public class GraficoController implements Initializable {
         transferirDados();
         executarDadosBar();
         executarDadosLn();
+        avisos.ok("Dados atualizados com sucesso!");
     }
 
     @FXML

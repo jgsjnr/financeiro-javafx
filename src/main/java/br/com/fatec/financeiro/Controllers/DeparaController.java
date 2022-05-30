@@ -5,20 +5,18 @@
 package br.com.fatec.financeiro.Controllers;
 
 import br.com.fatec.financeiro.App;
+import br.com.fatec.financeiro.Avisos;
 import br.com.fatec.financeiro.Conexao;
 import br.com.fatec.financeiro.Depara;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -31,7 +29,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
  */
 public class DeparaController implements Initializable {
     
-    
+    Avisos avisos = new Avisos();
 
     @FXML
     private Button btVoltar;
@@ -70,15 +68,15 @@ public class DeparaController implements Initializable {
                         conn.getRsTable().getInt("depara")));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DeparaController.class.getName()).log(Level.SEVERE, null, ex);
+            avisos.erro("Não foi possível executar acesso ao banco de dados devido: "+ex.getMessage());
         }
         tbDepara.setItems(depara);
     }
+    
     public void deletarDepara(){
         Depara pos = tbDepara.getSelectionModel().getSelectedItem();
         String query = "DELETE FROM depara_padrao WHERE depara = "+pos.getDepara()+";";
         conn.executarQuery(query);
-        System.out.println(pos.getTipo());
     }
     
     public void inserirDepara(){
@@ -86,7 +84,7 @@ public class DeparaController implements Initializable {
             String query = "INSERT INTO depara_padrao(depara, tipo) VALUES('"+txDepara.getText()+"','"+txTipo.getText()+"');";
             conn.executarQuery(query);
         }else{
-            System.out.println("Campos vazios");
+            avisos.inform("Não é possível enviars campos vazios: ");
         }
         initDepara();
     }
@@ -111,12 +109,14 @@ public class DeparaController implements Initializable {
     private void remover_Click(ActionEvent event) {
         deletarDepara();
         initDepara();
+        avisos.ok("Excluido com sucesso!");
     }
 
     @FXML
     private void adicionar_Click(ActionEvent event) {
         inserirDepara();
         initDepara();
+        avisos.ok("Adicionado com sucesso!");
     }
     
 }

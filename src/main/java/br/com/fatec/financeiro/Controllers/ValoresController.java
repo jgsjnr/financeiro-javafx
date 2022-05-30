@@ -5,6 +5,7 @@
 package br.com.fatec.financeiro.Controllers;
 
 import br.com.fatec.financeiro.App;
+import br.com.fatec.financeiro.Avisos;
 import br.com.fatec.financeiro.Conexao;
 import br.com.fatec.financeiro.Depara;
 import br.com.fatec.financeiro.Usuario;
@@ -12,14 +13,11 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -31,7 +29,7 @@ import javafx.scene.control.TextField;
  * @author junior
  */
 public class ValoresController implements Initializable {
-
+    Avisos avisos = new Avisos();
     @FXML
     private Button btVoltar;
     @FXML
@@ -55,6 +53,7 @@ public class ValoresController implements Initializable {
     
     
     public void carregarCmbDepara(){
+        cmbFiltro.getItems().clear();
         String query = "SELECT * FROM depara_padrao";
         conn.setRsTable(query);
         try{
@@ -64,10 +63,11 @@ public class ValoresController implements Initializable {
                         conn.getRsTable().getInt("depara")));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(VisualizarController.class.getName()).log(Level.SEVERE, null, ex);
+            avisos.erro("Não foi possível obter dados devido: "+ex.getMessage());
         }
         cmbFiltro.setItems(depara_lista);
     }
+    
     public void carregarUsuarios(){
         String query = "SELECT * FROM usuarios;";
         conn.setRsTable(query);
@@ -77,11 +77,7 @@ public class ValoresController implements Initializable {
                         conn.getRsTable().getString("senha"), conn.getRsTable().getInt("id")));
             }
         } catch (SQLException ex) {
-            Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
-            alerta.setTitle("Mensagem");
-            alerta.setHeaderText("Problemas");
-            alerta.setContentText("Deu ruim na hora de puxar os dados");
-            alerta.showAndWait(); //exibe a mensagem
+            avisos.erro("Não foi possível obter dados devido: "+ex.getMessage());
         }
         cmbUsuario.setItems(usuarios);
     }
@@ -97,17 +93,8 @@ public class ValoresController implements Initializable {
             cmbFiltro.getSelectionModel().clearSelection();
             cmbUsuario.getSelectionModel().clearSelection();
             carregarCmbDepara();
-            Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
-            alerta.setTitle("Mensagem");
-            alerta.setHeaderText("Informações");
-            alerta.setContentText("Adicionado com sucesso");
-            alerta.showAndWait(); //exibe a mensagem
         }else{
-            Alert alerta = new Alert(Alert.AlertType.ERROR);
-            alerta.setTitle("Mensagem");
-            alerta.setHeaderText("Informações");
-            alerta.setContentText("Deu ruim meu camarada");
-            alerta.showAndWait(); //exibe a mensagem
+            avisos.erro("Não foi possível adicionar banco ao banco de dados!");
         }
         
     }
@@ -129,10 +116,12 @@ public class ValoresController implements Initializable {
     @FXML
     private void adicionar_Click(ActionEvent event) {
         adicionarValores();
+        avisos.ok("Adicionado com sucesso!");
     }
 
     @FXML
     private void visualizar_Click(ActionEvent event) {
+        VisualizarController.newWindow.close();
         App.mudarCena("Visualizar");
     }
 

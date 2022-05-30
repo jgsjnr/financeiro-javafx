@@ -5,6 +5,7 @@
 package br.com.fatec.financeiro.Controllers;
 
 import br.com.fatec.financeiro.App;
+import br.com.fatec.financeiro.Avisos;
 import br.com.fatec.financeiro.Conexao;
 import br.com.fatec.financeiro.Depara;
 import br.com.fatec.financeiro.Valores;
@@ -41,6 +42,8 @@ import javafx.stage.Stage;
  */
 public class VisualizarController implements Initializable {
 
+    Avisos avisos = new Avisos();
+    
     @FXML
     private Button btVoltar;
     @FXML
@@ -83,11 +86,13 @@ public class VisualizarController implements Initializable {
         txPreco.clear();
         dtEditavel.setValue(null);
         cmbFiltro.getSelectionModel().clearSelection();
+        avisos.ok("Limpo com sucesso!");
     }
     
     
     private void carregarEdicao(){
         tbValores.getSelectionModel().selectedItemProperty().addListener((observado, antigo, novo) -> {
+            txPreco.setText(String.valueOf(novo.getPreco()));
         });
     }
     
@@ -111,7 +116,7 @@ public class VisualizarController implements Initializable {
                         conn.getRsTable().getInt("depara")));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(VisualizarController.class.getName()).log(Level.SEVERE, null, ex);
+            avisos.erro("Não foi possível carregar informações devido: "+ex.getMessage());
         }
         cmbFiltro.setItems(depara_lista);
         cmbDepara.setItems(depara_lista);
@@ -131,7 +136,7 @@ public class VisualizarController implements Initializable {
                         conn.getRsTable().getInt("fk_depara")));
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(VisualizarController.class.getName()).log(Level.SEVERE, null, ex);
+                avisos.erro("Não foi possível carregar informações devido: "+ex.getMessage());
             }
         tbValores.setItems(valores);
     }
@@ -149,7 +154,7 @@ public class VisualizarController implements Initializable {
                             conn.getRsTable().getInt("fk_depara")));
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(VisualizarController.class.getName()).log(Level.SEVERE, null, ex);
+                avisos.erro("Não foi possível carregar informações devido: "+ex.getMessage());
             }
             tbValores.setItems(valores);
         };
@@ -170,7 +175,7 @@ public class VisualizarController implements Initializable {
         try {
             criarJanela();
         } catch (IOException ex) {
-            Logger.getLogger(VisualizarController.class.getName()).log(Level.SEVERE, null, ex);
+            avisos.erro("Não foi possível instanciar uma janela devido: "+ex.getMessage());
         }
     }   
     
@@ -209,17 +214,9 @@ public class VisualizarController implements Initializable {
                     + " WHERE id = " + val.getId() + ";";
             conn.executarQuery(query);
             limparSelecoes();
-            Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
-            alerta.setTitle("Mensagem");
-            alerta.setHeaderText("Informações");
-            alerta.setContentText("Adicionado com sucesso");
-            alerta.showAndWait(); //exibe a mensagem
+            avisos.ok("Adicionado com sucesso!");
         }else{
-            Alert alerta = new Alert(Alert.AlertType.ERROR);
-            alerta.setTitle("Mensagem");
-            alerta.setHeaderText("Informações");
-            alerta.setContentText("Deu ruim meu camarada");
-            alerta.showAndWait(); //exibe a mensagem
+            avisos.erro("Não foi possível editar dados");
         }
         cmbDepara.getSelectionModel().clearSelection();
     }

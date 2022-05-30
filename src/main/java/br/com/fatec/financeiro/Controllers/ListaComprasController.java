@@ -5,14 +5,12 @@
 package br.com.fatec.financeiro.Controllers;
 
 import br.com.fatec.financeiro.App;
+import br.com.fatec.financeiro.Avisos;
 import br.com.fatec.financeiro.Conexao;
-import br.com.fatec.financeiro.Depara;
-import br.com.fatec.financeiro.ListaCompras;
 import br.com.fatec.financeiro.Depara;
 import br.com.fatec.financeiro.ListaCompras;
 import com.opencsv.CSVWriter;
 import java.io.IOException;
-import java.io.Writer;
 import static java.lang.Integer.parseInt;
 import java.net.URL;
 import java.io.Writer;
@@ -45,6 +43,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
  */
 public class ListaComprasController implements Initializable {
 
+    Avisos avisos = new Avisos();
 
     @FXML   
     private TableColumn<ListaCompras, Integer> clId;
@@ -100,7 +99,7 @@ public class ListaComprasController implements Initializable {
                         conn.getRsTable().getInt("depara")));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(VisualizarController.class.getName()).log(Level.SEVERE, null, ex);
+            avisos.erro("Não foi possível carregar os dados devido: "+ex.getMessage());
         }
         cbCategoria.setItems(combo);
     }
@@ -154,8 +153,9 @@ public class ListaComprasController implements Initializable {
                     cbCategoria.getSelectionModel().getSelectedItem().getTipo()));
             tabelaLista.setItems(lista);
             atualizarLista();
+            avisos.ok("Adicionado com sucesso!");
         }else{
-            System.out.println("Zoado");
+            avisos.erro("Não foi possível inserir dados!");
         }
         limpar();
        //pega todos os valores e transforma em uma lista
@@ -168,6 +168,7 @@ public class ListaComprasController implements Initializable {
     private void remove(ActionEvent event) {
         int selectedID = tabelaLista.getSelectionModel().getSelectedIndex();
         tabelaLista.getItems().remove(selectedID);
+        avisos.ok("Removido com sucesso!");
     }
     
     // atualiza com informações novas 
@@ -185,6 +186,7 @@ public class ListaComprasController implements Initializable {
             }
         }
         atualizarLista();
+        avisos.ok("Atualizados com sucesso!");
     }
 
     @FXML
@@ -201,8 +203,9 @@ public class ListaComprasController implements Initializable {
             csv.writeAll(meuMel);
             csv.flush();
             coracaoBandido.close();
+            avisos.ok("Dados exportados com sucesso!");
         }else{
-            System.out.println("Deu ruim");
+            avisos.erro("Não foi possível exportar os dados!");
         }
         
     }
