@@ -31,24 +31,13 @@ public class GraficoController implements Initializable {
     Avisos avisos = new Avisos();
     Conexao conn = new Conexao("fin");
     ArrayList<Dados> dados = new ArrayList<>();
-    XYChart.Series serieBar = new XYChart.Series();
     XYChart.Series serieLn = new XYChart.Series();
-    @FXML
-    private BarChart<String, Integer> gfGastos;
     @FXML
     private Button btnAtualizar;
     @FXML
-    private NumberAxis y;
-    @FXML
-    private CategoryAxis x;
-    @FXML
-    private LineChart<String, Integer> gfGastoln;
-    @FXML
-    private NumberAxis yln;
-    @FXML
-    private CategoryAxis xln;
-    @FXML
     private Button btVoltar;
+    @FXML
+    private BarChart<String, Integer> gfGastos;
     /**
      * Initializes the controller class.
      */
@@ -57,11 +46,8 @@ public class GraficoController implements Initializable {
         // TODO
         conn.iniciarConexao();
         carregarDados();
-        carregarDados();
-        transferirDados();        
-        executarDadosLn();
-        executarDadosBar();
-
+        //transferirDados();        
+        executarDados();
     }
     
     private void carregarDados(){
@@ -69,33 +55,28 @@ public class GraficoController implements Initializable {
         conn.setRsTable(query);
         try {
             while(conn.getRsTable().next()){
-                dados.add(new Dados(conn.getRsTable().getString("ano"), conn.getRsTable().getFloat("soma")));
+                serieLn.getData().add(new XYChart.Data(conn.getRsTable().getString("ano"), conn.getRsTable().getInt("soma")));
             }
         } catch (SQLException ex) {
             avisos.erro("Não foi possível carregar dados devido: "+ex.getMessage());
         }
     }
-    
+    /*
     private void transferirDados(){
+        serieLn.getData().removeAll();
         for(Dados d: dados){
             serieLn.getData().add(new XYChart.Data(d.getAno(), d.getValor()));
-            serieBar.getData().add(new XYChart.Data(d.getAno(), d.getValor()));
         }
     }
-    
-    private void executarDadosLn(){
-        gfGastoln.getData().addAll(serieLn);
-    }
-    private void executarDadosBar(){
-        gfGastos.getData().addAll(serieBar);
+    */
+    private void executarDados(){
+        gfGastos.getData().addAll(serieLn);
     }
 
     @FXML
     private void atualizar_Click(ActionEvent event) {
+        //transferirDados();
         carregarDados();
-        transferirDados();
-        executarDadosBar();
-        executarDadosLn();
         avisos.ok("Dados atualizados com sucesso!");
     }
 

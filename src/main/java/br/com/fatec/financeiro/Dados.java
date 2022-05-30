@@ -10,9 +10,9 @@ package br.com.fatec.financeiro;
  */
 public class Dados {
     private String ano;
-    private float valor;
+    private int valor;
 
-    public Dados(String ano, float valor) {
+    public Dados(String ano, int valor) {
         this.ano = ano;
         this.valor = valor;
     }
@@ -29,7 +29,7 @@ public class Dados {
         return valor;
     }
 
-    public void setValor(float valor) {
+    public void setValor(int valor) {
         this.valor = valor;
     }
     
