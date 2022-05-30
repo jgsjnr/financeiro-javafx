@@ -111,7 +111,10 @@ public class ListaComprasController implements Initializable {
         conn.iniciarConexao();
         //Configurando o comportamento das celulas
         tabelaLista.getSelectionModel().selectedItemProperty().addListener((observado, velho, novo) -> {
-            txtPreco_compra.setText(Integer.toString(novo.getPrecoCompra()));
+            if(novo!= null){
+                txtPreco_compra.setText(Integer.toString(novo.getPrecoCompra()));
+                atualizarLista();
+            }
         });
         clId.setCellValueFactory(new PropertyValueFactory<>("ID"));
         clPreco_compra.setCellValueFactory(new PropertyValueFactory<>("precoCompra"));
@@ -139,7 +142,7 @@ public class ListaComprasController implements Initializable {
 
     @FXML
     private void inserir(ActionEvent event) {
-        if(txtPreco_compra.getText() != ""){
+        if(txtPreco_compra.getText() != "" && cbCategoria.getSelectionModel().getSelectedItem() != null){
             int id = 0;
             ListaCompras aux = new ListaCompras();
             if(lista != null){
@@ -152,10 +155,10 @@ public class ListaComprasController implements Initializable {
                     String.valueOf(data),
                     cbCategoria.getSelectionModel().getSelectedItem().getTipo()));
             tabelaLista.setItems(lista);
-            atualizarLista();
             avisos.ok("Adicionado com sucesso!");
+            atualizarLista();
         }else{
-            avisos.erro("Não foi possível inserir dados!");
+            avisos.erro("Não foi possível inserir dados! Campos vazios");
         }
         limpar();
        //pega todos os valores e transforma em uma lista
@@ -166,9 +169,14 @@ public class ListaComprasController implements Initializable {
     
     @FXML
     private void remove(ActionEvent event) {
-        int selectedID = tabelaLista.getSelectionModel().getSelectedIndex();
-        tabelaLista.getItems().remove(selectedID);
-        avisos.ok("Removido com sucesso!");
+        if(tabelaLista.getSelectionModel().isEmpty() == true){
+            avisos.erro("Nada selecionado!");
+        }
+        else{
+            int selectedID = tabelaLista.getSelectionModel().getSelectedIndex();
+            tabelaLista.getItems().remove(selectedID);
+            avisos.ok("Removido com sucesso!");
+        }  
     }
     
     // atualiza com informações novas 
@@ -176,17 +184,21 @@ public class ListaComprasController implements Initializable {
     @FXML
     private void btnAtualizar_clicked(ActionEvent event) {
         ListaCompras aux = tabelaLista.getSelectionModel().getSelectedItem();
-        System.out.println(aux.getID());
-        for(ListaCompras l: lista){
-            if(aux.getID() == l.getID()){
-                l.setCategoria(cbCategoria.getSelectionModel().getSelectedItem().getTipo());
-                l.setDataCompra(String.valueOf(data));
-                l.setPrecoCompra(parseInt(txtPreco_compra.getText()));
-                break;
+        if(txtPreco_compra.getText() != "" && cbCategoria.getSelectionModel().getSelectedItem() != null){
+            for(ListaCompras l: lista){
+                if(aux.getID() == l.getID()){
+                    l.setCategoria(cbCategoria.getSelectionModel().getSelectedItem().getTipo());
+                    l.setDataCompra(String.valueOf(data));
+                    l.setPrecoCompra(parseInt(txtPreco_compra.getText()));
+                    tabelaLista.setItems(lista);
+                }
             }
+            avisos.ok("Atualizados com sucesso!");
         }
-        atualizarLista();
-        avisos.ok("Atualizados com sucesso!");
+        else{
+            avisos.erro("Não foi possível inserir dados! Campos vazios");
+        }
+        tabelaLista.setItems(lista);
     }
 
     @FXML
