@@ -79,14 +79,16 @@ public class DeparaController implements Initializable {
         conn.executarQuery(query);
     }
     
-    public void inserirDepara(){
+    public boolean inserirDepara(){
         if(txDepara.getText() != "" | txTipo.getText() != ""){
             String query = "INSERT INTO depara_padrao(depara, tipo) VALUES('"+txDepara.getText()+"','"+txTipo.getText()+"');";
             conn.executarQuery(query);
+            initDepara();
+            return true;
         }else{
             avisos.inform("Não é possível enviars campos vazios: ");
+            return false;
         }
-        initDepara();
     }
     
 
@@ -114,9 +116,10 @@ public class DeparaController implements Initializable {
 
     @FXML
     private void adicionar_Click(ActionEvent event) {
-        inserirDepara();
+        if(inserirDepara()){
+            avisos.ok("Adicionado com sucesso!");
+        }
         initDepara();
-        avisos.ok("Adicionado com sucesso!");
     }
     
 }
