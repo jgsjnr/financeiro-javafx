@@ -4,6 +4,7 @@
  */
 package br.com.fatec.financeiro;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -13,11 +14,11 @@ import java.util.Date;
 public class ListaCompras {
     
     private int ID;
-    private int precoCompra;
+    private BigDecimal precoCompra;
     private String dataCompra;
     private String Categoria;
 
-    public ListaCompras(int ID, int precoCompra, String dataCompra, String Categoria) {
+    public ListaCompras(int ID, BigDecimal precoCompra, String dataCompra, String Categoria) {
         this.ID = ID;
         this.precoCompra = precoCompra;
         this.dataCompra = dataCompra;
@@ -33,11 +34,11 @@ public class ListaCompras {
         this.ID = ID;
     }
 
-    public int getPrecoCompra() {
+    public BigDecimal getPrecoCompra() {
         return precoCompra;
     }
 
-    public void setPrecoCompra(int precoCompra) {
+    public void setPrecoCompra(BigDecimal precoCompra) {
         this.precoCompra = precoCompra;
     }
 

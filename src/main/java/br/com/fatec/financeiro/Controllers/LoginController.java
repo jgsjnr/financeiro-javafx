@@ -72,7 +72,7 @@ public class LoginController implements Initializable {
             App.mudarCena("Menu");
         }
         else{
-            avisos.erro("Não foim possível realizar login!");
+            avisos.erro("Não foi possível realizar login!");
         }
     }
     

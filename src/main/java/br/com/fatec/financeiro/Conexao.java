@@ -18,6 +18,8 @@ import javafx.scene.control.Alert;
  * @author junior
  */
 public class Conexao {
+    public Avisos avisos = new Avisos();
+    private SQLException sqlex = new SQLException();
     private Connection db_conexao;
     private ResultSet rsTable;
     private static final String DRIVER = "com.mysql.jdbc.Driver";
@@ -33,11 +35,7 @@ public class Conexao {
             db_conexao = DriverManager.getConnection(LINK, USER, PASSWD);
         } 
         catch(ClassNotFoundException | SQLException ex){
-            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-            alerta.setTitle("Mensagem");
-            alerta.setHeaderText("Informações");
-            alerta.setContentText("Erro: " + ex.getMessage());
-            alerta.showAndWait(); //exibe a mensagem
+            avisos.erro("Não foi possível iniciar a conexão devido: "+ex.getMessage());
         }
     }
 
@@ -54,11 +52,7 @@ public class Conexao {
             Statement temp = db_conexao.createStatement();
             this.rsTable = temp.executeQuery(query);
         } catch (SQLException ex) {
-            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-            alerta.setTitle("Mensagem");
-            alerta.setHeaderText("Informações");
-            alerta.setContentText("Houve um erro ao executar a busca: " + ex.getMessage());
-            alerta.showAndWait(); //exibe a mensagem
+            avisos.erro("Houve um erro ao executar a busca: " + ex.getMessage());
         }
     }
     
@@ -66,24 +60,22 @@ public class Conexao {
         try{
             Statement temp = db_conexao.createStatement();
             temp.executeUpdate(query);
+            this.sqlex = null;
         } catch (SQLException ex) {
-            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-            alerta.setTitle("Mensagem");
-            alerta.setHeaderText("Informações");
-            alerta.setContentText("Houve um erro ao adiconar dados: " + ex.getMessage());
-            alerta.showAndWait(); //exibe a mensagem
+            this.sqlex = ex;
+            avisos.erro("Houve um erro ao adiconar dados: " + ex.getMessage());
         }
+    }
+
+    public SQLException getSqlex() {
+        return sqlex;
     }
     
     public void fecharConexao(){
         try{
             db_conexao.close();
         } catch (SQLException ex) {
-            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-            alerta.setTitle("Mensagem");
-            alerta.setHeaderText("Informações");
-            alerta.setContentText("Houver um erro ao fechar a conexão: " + ex.getMessage());
-            alerta.showAndWait(); //exibe a mensagem
+            avisos.erro("Houver um erro ao fechar a conexão: " + ex.getMessage());
         }
     }
     
@@ -91,7 +83,7 @@ public class Conexao {
         try {
             return rsTable.next();
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            avisos.erro("Não foi possível pegar o proximo item: "+ex.getMessage());
         }
         return false;
     }

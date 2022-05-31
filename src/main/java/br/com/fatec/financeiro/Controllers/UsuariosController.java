@@ -16,7 +16,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -96,7 +95,7 @@ public class UsuariosController implements Initializable {
             carregarUsuarios();
             avisos.ok("Adicionado com sucesso!");
         }else{
-            avisos.erro("Não foi possível adicionar");
+            avisos.erro("Não foi possível adicionar, campos vazios");
         }
     }
 
@@ -108,9 +107,11 @@ public class UsuariosController implements Initializable {
             conn.executarQuery(query);
             txUsuario.clear();
             txSenha.clear();
-            avisos.ok("Removido com sucesso!");
+            if(conn.getSqlex() == null){
+                avisos.ok("Removido com sucesso!");
+            }
         }else{
-            avisos.erro("Não foi possível remover");
+            avisos.erro("Não foi possível remover, campos vazios");
         }
         carregarUsuarios();
     }

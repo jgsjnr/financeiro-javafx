@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -74,14 +75,14 @@ public class VisualizarController implements Initializable {
     public static Stage newWindow = new Stage();
     private final Conexao conn = new Conexao("fin");
     ObservableList<Valores> valores = FXCollections.observableArrayList();
-    ObservableList<Depara> depara_lista = FXCollections.observableArrayList();    
+    ObservableList<Depara> depara_lista = FXCollections.observableArrayList();
+    FilteredList<Valores> valoresFiltrados = new FilteredList<>(valores, b -> true);
     
     LocalDate data;
     
     private void limparSelecoes(){
         txPreco.requestFocus();
         txPreco.clear();
-        dtEditavel.setValue(null);
         cmbFiltro.getSelectionModel().clearSelection();
         avisos.ok("Limpo com sucesso!");
     }
@@ -140,7 +141,6 @@ public class VisualizarController implements Initializable {
     }
     
     public void atualizarFiltro(int fil){
-        valores.clear();
         tbValores.getItems().clear();
         String query = "SELECT * FROM valores WHERE fk_depara = "+fil+";";
             conn.setRsTable(query);
@@ -155,7 +155,7 @@ public class VisualizarController implements Initializable {
             } catch (SQLException ex) {
                 avisos.erro("Não foi possível carregar informações devido: "+ex.getMessage());
             }
-            tbValores.setItems(valores);
+            //tbValores.setItems(valores);
         };
 
     @Override
@@ -170,12 +170,13 @@ public class VisualizarController implements Initializable {
         carregarTabelaValores();
         carregarCmbDepara();
         atualizarTabela();
-        carregarFiltro();
+        //carregarFiltro();
         try {
             criarJanela();
         } catch (IOException ex) {
             avisos.erro("Não foi possível instanciar uma janela devido: "+ex.getMessage());
         }
+        
     }   
     
     private void atualizarTabela(){
@@ -183,14 +184,6 @@ public class VisualizarController implements Initializable {
             if(novo != null){
                 txPreco.setText(String.valueOf(novo.getPreco()));
             }
-        });
-    }
-
-    private void carregarFiltro(){
-        cmbFiltro.valueProperty().addListener((observado, velho, novo) -> {
-            Depara p = new Depara();
-            p = cmbFiltro.getValue();
-            //atualizarFiltro(p.getDepara());
         });
     }
     @FXML
@@ -205,18 +198,35 @@ public class VisualizarController implements Initializable {
 
     @FXML
     private void editar_Click(ActionEvent event) {
-        Depara aux = cmbDepara.getValue();
+        Depara aux = cmbDepara.getSelectionModel().getSelectedItem();
         Valores val = tbValores.getSelectionModel().getSelectedItem();
-        if(txPreco.getText() != "" | dtEditavel.getValue() != null){
-            String query = "UPDATE valores"
-                    + " SET preco = "+txPreco.getText()+", data_compra = '"+data.toString()+"', fk_depara = "+aux.getDepara()+""
-                    + " WHERE id = " + val.getId() + ";";
-            conn.executarQuery(query);
-            limparSelecoes();
-            avisos.ok("Adicionado com sucesso!");
+        if(cmbDepara.getSelectionModel().isEmpty()){
+            avisos.erro("Selecione categaoria antes de editar!");
         }else{
-            avisos.erro("Não foi possível editar dados, campos vazios");
+            if(tbValores.getSelectionModel().isEmpty()){
+            avisos.erro("Selecione antes de editar!");
+            }
+            else{
+               if(cmbDepara.getSelectionModel().getSelectedItem() != null && txPreco.getText() == ""){
+                avisos.erro("Não foi possível editar dados, campos vazios, ou não selecionado");
+                }
+                else{
+                    if(txPreco.getText() != "" | data != null | tbValores.getSelectionModel().getSelectedItem() != null | cmbDepara.getSelectionModel().getSelectedItem() != null){
+                    String query = "UPDATE valores"
+                            + " SET preco = "+txPreco.getText()+", data_compra = '"+String.valueOf(data)+"', fk_depara = "+aux.getDepara()+""
+                            + " WHERE id = " + val.getId() + ";";
+                    conn.executarQuery(query);
+                    limparSelecoes();
+                    avisos.ok("Editado com sucesso!");
+                    data = null;
+                    }else{
+                        avisos.erro("Não foi possível editar dados, campos vazios, ou não selecionado");
+                    }
+                } 
+            }
         }
+        
+        
         cmbDepara.getSelectionModel().clearSelection();
     }
 
@@ -243,7 +253,8 @@ public class VisualizarController implements Initializable {
     @FXML
     private void filtro_Change(ActionEvent event) {
         System.out.println(cmbFiltro.getSelectionModel().getSelectedItem().getDepara());
-        atualizarFiltro(cmbFiltro.getSelectionModel().getSelectedItem().getDepara());
+        int n = cmbFiltro.getSelectionModel().getSelectedItem().getDepara();
+        atualizarFiltro(n);
     }
 
 

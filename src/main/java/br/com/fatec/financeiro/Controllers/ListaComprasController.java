@@ -14,15 +14,15 @@ import java.io.IOException;
 import static java.lang.Integer.parseInt;
 import java.net.URL;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -112,9 +112,16 @@ public class ListaComprasController implements Initializable {
         //Configurando o comportamento das celulas
         tabelaLista.getSelectionModel().selectedItemProperty().addListener((observado, velho, novo) -> {
             if(novo!= null){
-                txtPreco_compra.setText(Integer.toString(novo.getPrecoCompra()));
+                txtPreco_compra.setText(String.valueOf(novo.getPrecoCompra()));
                 atualizarLista();
             }
+        });
+        lista.addListener(new ListChangeListener(){
+            @Override
+            public void onChanged(ListChangeListener.Change change) {
+                atualizarLista();
+            }
+            
         });
         clId.setCellValueFactory(new PropertyValueFactory<>("ID"));
         clPreco_compra.setCellValueFactory(new PropertyValueFactory<>("precoCompra"));
@@ -151,7 +158,7 @@ public class ListaComprasController implements Initializable {
                 }
             }
             lista.add(new ListaCompras((aux.getID()+1),
-                    parseInt(txtPreco_compra.getText()),
+                    BigDecimal.valueOf(Float.parseFloat(txtPreco_compra.getText())),
                     String.valueOf(data),
                     cbCategoria.getSelectionModel().getSelectedItem().getTipo()));
             tabelaLista.setItems(lista);
@@ -185,22 +192,35 @@ public class ListaComprasController implements Initializable {
     private void btnAtualizar_clicked(ActionEvent event) {
         ListaCompras aux = tabelaLista.getSelectionModel().getSelectedItem();
         if(txtPreco_compra.getText() != "" && cbCategoria.getSelectionModel().getSelectedItem() != null){
+            for(int i = 0; i < lista.size(); ++i){
+                if(lista.get(i).getID() == aux.getID()){
+                    lista.set(i, new ListaCompras(aux.getID(), BigDecimal.valueOf(Float.parseFloat(txtPreco_compra.getText())), String.valueOf(data), cbCategoria.getSelectionModel().getSelectedItem().getTipo())); 
+                }
+            /*
             for(ListaCompras l: lista){
                 if(aux.getID() == l.getID()){
+                    l. = 
+                    //new ListaCompras(aux.getID(), BigDecimal.valueOf(Float.parseFloat(txtPreco_compra.getText())), String.valueOf(data), cbCategoria.getSelectionModel().getSelectedItem().getTipo());
+                    /*
                     l.setCategoria(cbCategoria.getSelectionModel().getSelectedItem().getTipo());
                     l.setDataCompra(String.valueOf(data));
-                    l.setPrecoCompra(parseInt(txtPreco_compra.getText()));
-                    tabelaLista.setItems(lista);
+                    l.setPrecoCompra(BigDecimal.valueOf(Float.parseFloat(txtPreco_compra.getText())));
+                    */
                 }
-            }
             avisos.ok("Atualizados com sucesso!");
-        }
-        else{
+            verSeDaCert();
+            }
+            else{
             avisos.erro("Não foi possível inserir dados! Campos vazios");
         }
-        tabelaLista.setItems(lista);
+        verSeDaCert();
     }
 
+    
+    public void verSeDaCert(){
+        atualizarLista();
+    }
+    
     @FXML
     private void btnExportar_clicked(ActionEvent event) throws IOException {
         if(lista != null){

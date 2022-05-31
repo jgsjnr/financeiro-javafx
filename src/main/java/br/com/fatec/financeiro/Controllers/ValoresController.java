@@ -81,12 +81,12 @@ public class ValoresController implements Initializable {
         }
         cmbUsuario.setItems(usuarios);
     }
-    public void adicionarValores(){
+    public boolean adicionarValores(){
         Depara d = cmbFiltro.getValue();
         Usuario u = cmbUsuario.getValue();
-        if(this.data == null | txPreco.getText() != "" | cmbUsuario.getSelectionModel().isEmpty() | cmbFiltro.getSelectionModel().isEmpty()){
+        if(data != null | txPreco.getText() != "" | cmbUsuario.getSelectionModel().getSelectedItem() != null | cmbFiltro.getSelectionModel().getSelectedItem() != null){
             String query = "INSERT INTO valores(preco, data_compra, fk_id, fk_depara) "
-                    + "VALUES('"+txPreco.getText()+"','"+data.toString()+"','"+u.getId()+"','"+d.getDepara()+"');";
+                    + "VALUES('"+txPreco.getText()+"','"+String.valueOf(data)+"','"+u.getId()+"','"+d.getDepara()+"');";
             conn.executarQuery(query);
             txPreco.clear();
             txPreco.requestFocus();
@@ -94,8 +94,10 @@ public class ValoresController implements Initializable {
             cmbUsuario.getSelectionModel().clearSelection();
             carregarCmbDepara();
             avisos.ok("Adicionados com sucesso!");
+            return true;
         }else{
             avisos.erro("Não foi possível adicionar banco ao banco de dados!");
+            return false;
         }
         
     }
@@ -116,8 +118,9 @@ public class ValoresController implements Initializable {
 
     @FXML
     private void adicionar_Click(ActionEvent event) {
-        adicionarValores();
-        avisos.ok("Adicionado com sucesso!");
+        if(adicionarValores()){
+            avisos.ok("Adicionado com sucesso!");
+        }  
     }
 
     @FXML

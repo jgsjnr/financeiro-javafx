@@ -75,8 +75,15 @@ public class DeparaController implements Initializable {
     
     public void deletarDepara(){
         Depara pos = tbDepara.getSelectionModel().getSelectedItem();
-        String query = "DELETE FROM depara_padrao WHERE depara = "+pos.getDepara()+";";
-        conn.executarQuery(query);
+        if(tbDepara.getSelectionModel().getSelectedItem() != null){
+            String query = "DELETE FROM depara_padrao WHERE depara = "+pos.getDepara()+";";
+            conn.executarQuery(query);
+            if(conn.getSqlex() == null){
+                avisos.ok("Excluido com sucesso!");
+            }
+        }else{
+            avisos.erro("Não foi possível excluir, campos vazios ou não selecionado: ");
+        } 
     }
     
     public boolean inserirDepara(){
@@ -91,7 +98,6 @@ public class DeparaController implements Initializable {
         }
     }
     
-
     /**
      * Initializes the controller class.
      */
@@ -111,7 +117,6 @@ public class DeparaController implements Initializable {
     private void remover_Click(ActionEvent event) {
         deletarDepara();
         initDepara();
-        avisos.ok("Excluido com sucesso!");
     }
 
     @FXML
