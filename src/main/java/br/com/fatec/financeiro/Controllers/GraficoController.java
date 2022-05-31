@@ -44,7 +44,7 @@ public class GraficoController implements Initializable {
     }
     
     private void carregarDados(){
-        String query = "select sum(preco) as soma, year(data_compra) as ano from valores group by ano;";
+        String query = "select sum(preco) as soma, concat(year(data_compra),month(data_compra)) as ano from valores group by ano;";
         conn.setRsTable(query);
         try {
             while(conn.getRsTable().next()){
