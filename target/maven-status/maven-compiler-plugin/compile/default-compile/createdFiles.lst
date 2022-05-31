@@ -7,7 +7,9 @@ br\com\fatec\financeiro\Depara.class
 br\com\fatec\financeiro\Controllers\ListaComprasController.class
 br\com\fatec\financeiro\Controllers\GraficoController.class
 br\com\fatec\financeiro\Usuario.class
+br\com\fatec\financeiro\Avisos.class
 br\com\fatec\financeiro\Controllers\LoginController.class
+br\com\fatec\financeiro\Controllers\ListaComprasController$1.class
 br\com\fatec\financeiro\Controllers\UsuariosController.class
 br\com\fatec\financeiro\Dados.class
 br\com\fatec\financeiro\Controllers\DeparaController.class
